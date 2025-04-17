@@ -8,7 +8,7 @@ env/
 venv/
 
 # Django
-db.sqlite3
+edahira.sqlite3
 *.log
 .env
 local_settings.py
