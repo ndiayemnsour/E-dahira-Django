@@ -1,25 +1,44 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from .utils import validate_image_file, validate_audio_file, optimize_image
 
 # Les models E-dahira
 
 #Classe dahira
 class Dahiras(models.Model):
-    nomDahira = models.CharField(max_length=200),
-    siege = models.CharField(max_length=200),
-    logo = models.ImageField(upload_to='media/image/'),
-    dateCreation = models.DateField(auto_now=True),
-    description = models.CharField(max_length=200),
+    nom_dahira = models.CharField(max_length=150, default="Dahira Tidiane")
+    siege = models.CharField(max_length=200, default="Siege")
+    logo = models.ImageField(
+        upload_to='media/image/',
+        validators=[validate_image_file],
+        help_text="Image au format JPG, JPEG, PNG ou GIF (max. 5 MB)",
+        default="image/default.jpeg"
+    )
+    date_creation = models.DateField(auto_now=True)
+    description = models.CharField(max_length=200, default="description")
+
+    def save(self, *args, **kwargs):
+        # Optimiser l'image du logo si elle a été modifiée
+        if self.logo and hasattr(self.logo, 'file'):
+            self.logo = optimize_image(self.logo)
+        super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.nomDahira} {self.siege} {self.logo} {self.dateCreation} {self.description}"
+        return f"{self.nom_dahira} {self.siege} {self.logo} {self.date_creation} {self.description}"
 
 #Classe Membres
 class Membres(AbstractUser):
     biography = models.TextField(blank=True, null=True)
-    telephone = models.CharField(max_length=100),
-    photo = models.ImageField(upload_to='media/image/'),
-    dateInscription = models.DateField(auto_now=True),
+    telephone  = models.CharField(max_length=20, blank=True, null=True)
+    photo = models.ImageField(
+        upload_to='media/image/', 
+        default='image/default.jpeg',
+        validators=[validate_image_file],
+        help_text="Image au format JPG, JPEG, PNG ou GIF (max. 5 MB)",
+        blank=True, null=True
+
+    )
+    date_inscription = models.DateField(auto_now=True)
     ROLE_CHOICES = [
         ('auditeur', 'Auditeur'),
         ('admin', 'Administrateur'),
@@ -28,42 +47,64 @@ class Membres(AbstractUser):
     role = models.CharField(max_length=100, choices=ROLE_CHOICES, default='auditeur')
     dahira = models.ForeignKey(Dahiras, on_delete=models.CASCADE, related_name='membres', null=True, blank=True)
 
+    def save(self, *args, **kwargs):
+        # Optimiser la photo de profil si elle a été modifiée
+        if self.photo and hasattr(self.photo, 'file') and not self.photo.name == 'image/default.jpeg':
+            self.photo = optimize_image(self.photo)
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"{self.username} {self.biography} {self.role} {self.dahira.nomDahira if self.dahira else 'Aucun dahira'} {self.telephone}  {self.photo}  {self.dateInscription} {self.email} {self.password} {self.first_name} {self.last_name}"
+        return f"{self.username} {self.biography} {self.role} {self.dahira.nom_dahira if self.dahira else 'Aucun dahira'} {self.telephone}  {self.photo}  {self.date_inscription} {self.email} {self.password} {self.first_name} {self.last_name}"
 
 
 
-# Classe Audio
+#Classe audio
 class Audio(models.Model):
-    theme = models.CharField(max_length=200),
-    chapitre = models.CharField(max_length=200),
-    sequence = models.CharField(max_length=200),
-    audioFile = models.FileField(upload_to='media/audio/'),
-    imageAudio = models.ImageField(upload_to='media/image/'),
-    dateAudio = models.DateField(auto_now=True),
-    duree = models.PositiveIntegerField(default=0),
+    theme = models.CharField(max_length=200)
+    chapitre = models.CharField(max_length=200)
+    sequence = models.CharField(max_length=200)
+    audio_file = models.FileField(
+        upload_to='media/audio/',
+        validators=[validate_audio_file],
+        help_text="Fichier audio au format MP3, WAV, OGG ou M4A (max. 20 MB)",
+        default="audio/defaut.ogg",
+        null=True,
+        blank=True
+    )
+    image_audio = models.ImageField(
+        upload_to='media/image/',
+        validators=[validate_image_file],
+        help_text="Image au format JPG, JPEG, PNG ou GIF (max. 5 MB)",
+        default="image/default.jpeg"
+    )
+    date_audio = models.DateField(auto_now=True)
+    duree = models.PositiveIntegerField(default=0)
     auteur = models.ForeignKey(Membres, on_delete=models.CASCADE, related_name='audio')
 
+    def save(self, *args, **kwargs):
+        # Optimiser l'image associée à l'audio si elle a été modifiée
+        if self.image_audio and hasattr(self.image_audio, 'file'):
+            self.image_audio = optimize_image(self.image_audio)
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"{self.theme} {self.chapitre} {self.sequence} {self.audioFile} {self.imageAudio} {self.dateAudio} {self.duree} {self.auteur} "
+        return f"{self.theme} {self.chapitre} {self.sequence} {self.audio_file} {self.image_audio} {self.date_audio} {self.duree} {self.auteur} "
 
 
 
 
 #class localite
 class Localites(models.Model):
-    nomLocalite = models.CharField(max_length=200),
+    nom_localite = models.CharField(max_length=200)
     dahira = models.ForeignKey(Dahiras, on_delete=models.CASCADE, related_name='localites')
 
     def __str__(self):
-        return f"{self.nomLocalite} {self.dahira} "
+        return f"{self.nom_localite} {self.dahira} "
 
 #section
 class Sections(models.Model):
-    nomSection = models.CharField(max_length=200),
+    nom_section = models.CharField(max_length=200)
     localite = models.ForeignKey(Localites, on_delete=models.CASCADE, related_name='sections')
 
     def __str__(self):
-        return f"{self.nomSection} {self.localite} "
-
-
+        return f"{self.nom_section} {self.localite}"
