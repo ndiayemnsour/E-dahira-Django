@@ -24,7 +24,7 @@ class Dahiras(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.nom_dahira} {self.siege} {self.logo} {self.date_creation} {self.description}"
+        return f"{self.nom_dahira} "
 
 #Classe Membres
 class Membres(AbstractUser):
@@ -54,7 +54,7 @@ class Membres(AbstractUser):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.username} {self.biography} {self.role} {self.dahira.nom_dahira if self.dahira else 'Aucun dahira'} {self.telephone}  {self.photo}  {self.date_inscription} {self.email} {self.password} {self.first_name} {self.last_name}"
+        return f" {self.first_name} {self.last_name}"
 
 
 
@@ -88,7 +88,7 @@ class Audio(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.theme} {self.chapitre} {self.sequence} {self.audio_file} {self.image_audio} {self.date_audio} {self.duree} {self.auteur} "
+        return f"{self.theme} {self.chapitre} "
 
 
 
@@ -99,7 +99,7 @@ class Localites(models.Model):
     dahira = models.ForeignKey(Dahiras, on_delete=models.CASCADE, related_name='localites')
 
     def __str__(self):
-        return f"{self.nom_localite} {self.dahira} "
+        return f"{self.nom_localite} "
 
 #section
 class Sections(models.Model):
@@ -107,4 +107,4 @@ class Sections(models.Model):
     localite = models.ForeignKey(Localites, on_delete=models.CASCADE, related_name='sections')
 
     def __str__(self):
-        return f"{self.nom_section} {self.localite}"
+        return f"{self.nom_section} "
