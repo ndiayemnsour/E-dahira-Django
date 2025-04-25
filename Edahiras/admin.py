@@ -4,6 +4,8 @@ from django.utils.html import format_html
 from .forms import MembresChangeForm, MembresCreationForm
 from .models import Membres, Dahiras, Audio, Localites, Sections
 
+
+
 @admin.register(Membres)
 class MembresAdmin(UserAdmin):
     form = MembresChangeForm
@@ -44,10 +46,39 @@ class MembresAdmin(UserAdmin):
 
     image_preview.short_description = "Aperçu de la photo"
 
-admin.site.register(Dahiras)
-admin.site.register(Audio)
-admin.site.register(Localites)
-admin.site.register(Sections)
+@admin.register(Audio)
+class AudioAdmin(admin.ModelAdmin):
+    list_display = (
+        'theme',
+        'chapitre',
+        'sequence',
+        'audio_file',
+        'image_audio',
+        'date_audio',
+        'duree',
+        'auteur',
+        'play_audio',
+    )
+
+    def play_audio(self, obj):
+        return format_html('<audio controls><source src="{}" type="audio/mpeg"></audio>', obj.audio_file.url)
+
+    play_audio.short_description = "Lecture"
+
+@admin.register(Localites)
+class LocalitesAdmin(admin.ModelAdmin):
+    list_display = ('nom_localite', 'dahira')
+
+@admin.register(Sections)
+class SectionsAdmin(admin.ModelAdmin):
+    list_display = ('nom_section', 'localite')
+
+@admin.register(Dahiras)
+class DahirasAdmin(admin.ModelAdmin):
+    readonly_fields = ['date_creation']
+    list_display = ('nom_dahira', 'siege', 'logo', 'date_creation', 'description')
+
+
 
 
 
