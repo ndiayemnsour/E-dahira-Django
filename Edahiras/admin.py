@@ -37,14 +37,21 @@ class MembresAdmin(UserAdmin):
         }),
     )
 
-    list_display = ('username', 'email', 'first_name', 'last_name', 'role', 'dahira', 'image_preview')
+    list_display = ('username', 'email', 'first_name', 'last_name', 'role', 'nom_dahira', 'image_preview')
 
+    # Pour affichier l'image
     def image_preview(self, obj):
         if obj.photo:
             return format_html('<img src="{}" width="100" height="100" style="object-fit: cover;" />', obj.photo.url)
         return "Aucune photo"
 
     image_preview.short_description = "Aperçu de la photo"
+
+    #Pour afficher juste le nom dahira pas L'objet dahira
+    def nom_dahira(self, obj):
+        return obj.dahira.nom_dahira if obj.dahira else "Aucun"
+
+    nom_dahira.short_description = "Dahira"
 
 @admin.register(Audio)
 class AudioAdmin(admin.ModelAdmin):
@@ -55,23 +62,38 @@ class AudioAdmin(admin.ModelAdmin):
         'audio_file',
         'image_audio',
         'date_audio',
-        'duree',
-        'auteur',
+        'nom_auteur',
         'play_audio',
     )
 
+    #Pour affichier l'audio en mode lecture
     def play_audio(self, obj):
         return format_html('<audio controls><source src="{}" type="audio/mpeg"></audio>', obj.audio_file.url)
 
     play_audio.short_description = "Lecture"
 
+    #Pour afficher le nom de L'auteur uniquement au lieu de retourner tout l'objet
+    def nom_auteur(self, obj):
+        return obj.auteur.first_name+" "+obj.auteur.last_name if obj.auteur else "Anonyme"
+
+    nom_auteur.short_description = "Auteur"
+
+
 @admin.register(Localites)
 class LocalitesAdmin(admin.ModelAdmin):
-    list_display = ('nom_localite', 'dahira')
+    list_display = ('nom_localite', 'nom_dahira')
+
+    # Pour afficher juste le nom dahira pas L'objet dahira
+    def nom_dahira(self, obj):
+        return obj.dahira.nom_dahira if obj.dahira else "Aucun"
+
 
 @admin.register(Sections)
 class SectionsAdmin(admin.ModelAdmin):
-    list_display = ('nom_section', 'localite')
+    list_display = ('nom_section', 'nom_localite')
+    def nom_localite(self, obj):
+        return obj.localite.nom_localite if obj.localite else "Anonyme"
+
 
 @admin.register(Dahiras)
 class DahirasAdmin(admin.ModelAdmin):
