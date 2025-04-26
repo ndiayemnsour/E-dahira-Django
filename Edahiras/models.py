@@ -6,13 +6,12 @@ from .utils import validate_image_file, validate_audio_file, optimize_image
 
 #Classe dahira
 class Dahiras(models.Model):
-    nom_dahira = models.CharField(max_length=150, default="Dahira Tidiane")
-    siege = models.CharField(max_length=200, default="Siege")
+    nom_dahira = models.CharField(max_length=150)
+    siege = models.CharField(max_length=200)
     logo = models.ImageField(
         upload_to='media/image/',
         validators=[validate_image_file],
         help_text="Image au format JPG, JPEG, PNG ou GIF (max. 5 MB)",
-        default="image/default.jpeg"
     )
     date_creation = models.DateField(auto_now=True)
     description = models.CharField(max_length=200, default="description")
@@ -31,8 +30,7 @@ class Membres(AbstractUser):
     biography = models.TextField(blank=True, null=True)
     telephone  = models.CharField(max_length=20, blank=True, null=True)
     photo = models.ImageField(
-        upload_to='media/image/', 
-        default='image/default.jpeg',
+        upload_to='media/image/',
         validators=[validate_image_file],
         help_text="Image au format JPG, JPEG, PNG ou GIF (max. 5 MB)",
         blank=True, null=True
@@ -44,12 +42,12 @@ class Membres(AbstractUser):
         ('admin', 'Administrateur'),
         ('conferencier', 'Conferencier'),
     ]
-    role = models.CharField(max_length=100, choices=ROLE_CHOICES, default='auditeur')
+    role = models.CharField(max_length=100, choices=ROLE_CHOICES)
     dahira = models.ForeignKey(Dahiras, on_delete=models.CASCADE, related_name='membres', null=True, blank=True)
 
     def save(self, *args, **kwargs):
         # Optimiser la photo de profil si elle a été modifiée
-        if self.photo and hasattr(self.photo, 'file') and not self.photo.name == 'image/default.jpeg':
+        if self.photo and hasattr(self.photo, 'file'):
             self.photo = optimize_image(self.photo)
         super().save(*args, **kwargs)
 
@@ -62,12 +60,11 @@ class Membres(AbstractUser):
 class Audio(models.Model):
     theme = models.CharField(max_length=200)
     chapitre = models.CharField(max_length=200)
-    sequence = models.CharField(max_length=200)
+    sequence = models.CharField(max_length=200, null=True, blank=True)
     audio_file = models.FileField(
         upload_to='media/audio/',
         validators=[validate_audio_file],
         help_text="Fichier audio au format MP3, WAV, OGG ou M4A (max. 20 MB)",
-        default="audio/defaut.ogg",
         null=True,
         blank=True
     )
@@ -75,7 +72,6 @@ class Audio(models.Model):
         upload_to='media/image/',
         validators=[validate_image_file],
         help_text="Image au format JPG, JPEG, PNG ou GIF (max. 5 MB)",
-        default="image/default.jpeg"
     )
     date_audio = models.DateField(auto_now=True)
     duree = models.PositiveIntegerField(default=0)
