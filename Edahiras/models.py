@@ -74,7 +74,6 @@ class Audio(models.Model):
         help_text="Image au format JPG, JPEG, PNG ou GIF (max. 5 MB)",
     )
     date_audio = models.DateField(auto_now=True)
-    duree = models.PositiveIntegerField(default=0)
     auteur = models.ForeignKey(Membres, on_delete=models.CASCADE, related_name='audio')
 
     def save(self, *args, **kwargs):
