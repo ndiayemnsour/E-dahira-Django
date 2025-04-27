@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import Membres, Dahiras, Audio, Localites, Sections
 
 #le serializer sert à convertir le modele en JSON
-class MemberSerializer(serializers.ModelSerializer):
+class MembresSerializer(serializers.ModelSerializer):
     class Meta:
         model = Membres
         fields = "__all__"
