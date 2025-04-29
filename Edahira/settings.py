@@ -36,6 +36,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "rest_framework",
+    "django_extensions",
     "Edahiras.apps.EdahirasConfig",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -136,3 +137,14 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 #Précision un custom User model dans les settings.py
 AUTH_USER_MODEL = 'Edahiras.Membres'
+
+# Permission et pagination
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+        'PAGE_SIZE': 10
+}
+
+

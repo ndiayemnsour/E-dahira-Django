@@ -16,12 +16,15 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.http import HttpResponse
+from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path('', lambda request: HttpResponse("Bienvenue sur la page d'accueil de E-dahira!")),
     path("admin/", admin.site.urls),
+    path('', include('Edahiras.urls')),
 ]
 
 # Serve media files in development

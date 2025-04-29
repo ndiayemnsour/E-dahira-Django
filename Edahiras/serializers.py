@@ -14,7 +14,7 @@ class DahirasSerializer(serializers.ModelSerializer):
         fields = "__all__"
         read_only_fields = ("id", "date_creation")
 
-class AudioSerializer(serializers.ModelSerializer):
+class AudioSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Audio
         fields = "__all__"

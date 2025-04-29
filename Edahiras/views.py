@@ -1,5 +1,4 @@
-from django.shortcuts import render
-from rest_framework import serializers, viewsets
+from rest_framework import viewsets
 from .models import Membres, Audio, Sections, Localites, Dahiras
 from .serializers import MembresSerializer, DahirasSerializer, AudioSerializer, SectionsSerializer, LocalitesSerializer
 
