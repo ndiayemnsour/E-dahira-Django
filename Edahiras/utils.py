@@ -6,8 +6,8 @@ import io
 from django.core.files.uploadedfile import InMemoryUploadedFile
 
 # Constantes pour les validations
-IMAGE_MAX_SIZE_MB = 5  # Taille maximale des images en MB
-AUDIO_MAX_SIZE_MB = 20  # Taille maximale des fichiers audio en MB
+IMAGE_MAX_SIZE_MB = 15  # Taille maximale des images en MB
+AUDIO_MAX_SIZE_MB = 50  # Taille maximale des fichiers audio en MB
 ALLOWED_IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif']
 ALLOWED_AUDIO_EXTENSIONS = ['.mp3', '.wav', '.ogg', '.m4a']
 ALLOWED_IMAGE_CONTENT_TYPES = ['image/jpeg', 'image/png', 'image/gif']

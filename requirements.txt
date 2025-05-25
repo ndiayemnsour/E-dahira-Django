@@ -11,6 +11,7 @@ Django==5.2
 django-cors-headers==4.7.0
 django-extensions==4.1
 djangorestframework==3.16.0
+djangorestframework_simplejwt==5.5.0
 Flask==3.1.0
 Flask-Admin==1.6.1
 Flask-Login==0.6.3
@@ -31,6 +32,7 @@ packaging==24.2
 pillow==11.2.1
 propcache==0.3.1
 psycopg2==2.9.10
+PyJWT==2.9.0
 pyserial==3.5
 python-dateutil==2.9.0.post0
 python-decouple==3.8

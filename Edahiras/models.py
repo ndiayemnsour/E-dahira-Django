@@ -11,7 +11,7 @@ class Dahiras(models.Model):
     logo = models.ImageField(
         upload_to='media/image/',
         validators=[validate_image_file],
-        help_text="Image au format JPG, JPEG, PNG ou GIF (max. 5 MB)",
+        help_text="Image au format JPG, JPEG, PNG ou GIF (max. 15 MB)",
     )
     date_creation = models.DateField(auto_now=True)
     description = models.CharField(max_length=200, default="description")
@@ -32,7 +32,7 @@ class Membres(AbstractUser):
     photo = models.ImageField(
         upload_to='media/image/',
         validators=[validate_image_file],
-        help_text="Image au format JPG, JPEG, PNG ou GIF (max. 5 MB)",
+        help_text="Image au format JPG, JPEG, PNG ou GIF (max. 50 MB)",
         blank=True, null=True
 
     )
@@ -54,13 +54,35 @@ class Membres(AbstractUser):
     def __str__(self):
         return f" {self.first_name} {self.last_name}"
 
+# Sequence
+class Sequence(models.Model):
+    nom_sequence = models.CharField(max_length=150)
+
+    def __str__(self):
+        return f"{self.nom_sequence}"
+
+
+# Chapitre
+class Chapitre(models.Model):
+    nom_chapitre = models.CharField(max_length=150)
+    sequence = models.ForeignKey(Sequence, on_delete=models.CASCADE, related_name='chapitres', null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.nom_chapitre}"
+
+
+#Theme
+class Theme(models.Model):
+    nom_theme = models.CharField(max_length=150)
+    chapitre = models.ForeignKey(Chapitre, on_delete=models.CASCADE, related_name='themes', null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.nom_theme}"
 
 
 #Classe audio
 class Audio(models.Model):
-    theme = models.CharField(max_length=200)
-    chapitre = models.CharField(max_length=200)
-    sequence = models.CharField(max_length=200, null=True, blank=True)
+    nom_audio = models.CharField(max_length=150)
     audio_file = models.FileField(
         upload_to='media/audio/',
         validators=[validate_audio_file],
@@ -75,6 +97,9 @@ class Audio(models.Model):
     )
     date_audio = models.DateField(auto_now=True)
     auteur = models.ForeignKey(Membres, on_delete=models.CASCADE, related_name='audio')
+    theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='audio')
+    chapitre = models.ForeignKey(Chapitre, on_delete=models.CASCADE, related_name='audio')
+    sequence = models.ForeignKey(Sequence, on_delete=models.CASCADE, related_name='audio')
 
     def save(self, *args, **kwargs):
         # Optimiser l'image associée à l'audio si elle a été modifiée

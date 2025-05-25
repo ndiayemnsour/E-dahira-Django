@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Membres, Dahiras, Audio, Localites, Sections
+from .models import Membres, Dahiras, Audio, Localites, Sections, Theme, Chapitre
+
 
 #le serializer sert à convertir le modele en JSON
 class DahirasSerializer(serializers.ModelSerializer):
@@ -16,7 +17,29 @@ class MembresSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "date_creation")
 
 
+class SequenceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Sections
+        fields = "__all__"
+
+class ChapitreSerializer(serializers.ModelSerializer):
+    sequence = SequenceSerializer(read_only=True)
+    class Meta:
+        model = Chapitre
+        fields = "__all__"
+
+
+class ThemeSerializer(serializers.ModelSerializer):
+    chapitre = ChapitreSerializer(read_only=True)
+    class Meta:
+        model = Theme
+        fields = "__all__"
+
+
 class AudioSerializer(serializers.HyperlinkedModelSerializer):
+    theme = ThemeSerializer(read_only=True)
+    chapitre = ChapitreSerializer(read_only=True)
+    sequence = SequenceSerializer(read_only=True)
     auteur = MembresSerializer(read_only=True)
     class Meta:
         model = Audio

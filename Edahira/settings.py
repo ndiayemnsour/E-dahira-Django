@@ -29,7 +29,9 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+'localhost', '127.0.0.1', '10.0.2.2'
+]
 
 
 # Application definition
@@ -128,7 +130,7 @@ STATIC_URL = "static/"
 
 # Media files (Uploads)
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -143,11 +145,20 @@ AUTH_USER_MODEL = 'Edahiras.Membres'
 
 # Permission et pagination
 REST_FRAMEWORK = {
+    #'DEFAULT_PAGINATION_CLASS': None,
+    # Activer JWT comme méthode d’authentification par défaut
+    # Ça va protéger toutes les routes DRF sauf celles où tu définis d’autres permissions.
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+        #'rest_framework.permissions.IsAuthenticated',  # ← exige que l'utilisateur soit connecté
     ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-        'PAGE_SIZE': 10
+        'PAGE_SIZE': 10,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+            'rest_framework_simplejwt.authentication.JWTAuthentication',
+
+        ),
+
 }
 
 

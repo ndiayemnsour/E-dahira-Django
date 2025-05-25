@@ -4,9 +4,9 @@ from django.conf.urls.static import static
 from django.http import HttpResponse
 from rest_framework import routers
 from django.contrib import admin
-
-from Edahiras import views
-from Edahiras.views import MembresViewSet, DahirasViewSet, AudioViewSet, LocalitesViewSet, SectionsViewSet
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from Edahiras.views import MembresViewSet, DahirasViewSet, AudioViewSet, LocalitesViewSet, SectionsViewSet, \
+      serve_audio_file
 
 router = routers.DefaultRouter()
 router.register(r'membres', MembresViewSet)
@@ -21,5 +21,8 @@ urlpatterns = [
       path('admin/', admin.site.urls),
       path('api/', include(router.urls)),
       path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+      path('media/audio/<str:filename>', serve_audio_file), # nouvelle route audio directe
+      path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+      path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
