@@ -2,8 +2,9 @@ import os
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.conf import settings
 from rest_framework import viewsets
-from .models import Membres, Audio, Sections, Localites, Dahiras
-from .serializers import MembresSerializer, DahirasSerializer, AudioSerializer, SectionsSerializer, LocalitesSerializer
+from .models import Membres, Audio, Sections, Localites, Dahiras, Sequence, Chapitre, Theme
+from .serializers import MembresSerializer, DahirasSerializer, AudioSerializer, SectionsSerializer, LocalitesSerializer, \
+    SequenceSerializer, ChapitreSerializer, ThemeSerializer
 from django.http import FileResponse, Http404
 
 #Crée une vue spéciale pour servir les fichiers audio (avec le bon header)
@@ -13,6 +14,7 @@ def serve_audio_file(request, filename):
         return FileResponse(open(file_path, 'rb'), content_type='audio/mpeg')
     else:
         raise Http404("Fichier audio non trouvé")
+
 # Contrôler les permissions dans chaque ViewSet (facultatif)
 # Si tu veux par exemple rendre /api/membres/ privée, mais laisser /api/localites/ publique, tu peux faire ça dans chaque ViewSet :
 # Creation d'une vue d'API
@@ -26,8 +28,21 @@ class DahirasViewSet(viewsets.ModelViewSet):
     serializer_class = DahirasSerializer
     #permission_classes = [IsAuthenticated]
 
+class SequenceViewSet(viewsets.ModelViewSet):
+    queryset = Sequence.objects.all()
+    serializer_class = SequenceSerializer
+
+class ChapitreViewSet(viewsets.ModelViewSet):
+    queryset = Chapitre.objects.all()
+    serializer_class = ChapitreSerializer
+
+class ThemeViewSet(viewsets.ModelViewSet):
+    queryset = Theme.objects.all()
+    serializer_class = ThemeSerializer
+
+
 class AudioViewSet(viewsets.ModelViewSet):
-    queryset = Audio.objects.all()
+    queryset = Audio.objects.all().order_by('-date_audio')
     serializer_class = AudioSerializer
     #permission_classes = [IsAuthenticated]
 

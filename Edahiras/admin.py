@@ -2,9 +2,11 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.utils.html import format_html
 from .forms import MembresChangeForm, MembresCreationForm
-from .models import Membres, Dahiras, Audio, Localites, Sections
+from .models import Membres, Dahiras, Audio, Localites, Sections, Theme, Chapitre, Sequence
 
-
+admin.site.register(Theme)
+admin.site.register(Chapitre)
+admin.site.register(Sequence)
 
 @admin.register(Membres)
 class MembresAdmin(UserAdmin):

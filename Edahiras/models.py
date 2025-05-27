@@ -82,7 +82,7 @@ class Theme(models.Model):
 
 #Classe audio
 class Audio(models.Model):
-    nom_audio = models.CharField(max_length=150)
+    nom_audio = models.CharField(max_length=150, null=True, blank=True, default='Audio')
     audio_file = models.FileField(
         upload_to='media/audio/',
         validators=[validate_audio_file],
@@ -95,11 +95,11 @@ class Audio(models.Model):
         validators=[validate_image_file],
         help_text="Image au format JPG, JPEG, PNG ou GIF (max. 5 MB)",
     )
-    date_audio = models.DateField(auto_now=True)
+    date_audio = models.DateField(auto_now=True, null=True, blank=True)
     auteur = models.ForeignKey(Membres, on_delete=models.CASCADE, related_name='audio')
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='audio')
     chapitre = models.ForeignKey(Chapitre, on_delete=models.CASCADE, related_name='audio')
-    sequence = models.ForeignKey(Sequence, on_delete=models.CASCADE, related_name='audio')
+    sequence = models.ForeignKey(Sequence, on_delete=models.CASCADE, related_name='audio', null=True, blank=True)
 
     def save(self, *args, **kwargs):
         # Optimiser l'image associée à l'audio si elle a été modifiée
@@ -108,7 +108,7 @@ class Audio(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.theme} {self.chapitre} "
+        return f"{self.theme} {self.chapitre} {self.sequence}"
 
 
 

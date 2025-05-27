@@ -6,14 +6,17 @@ from rest_framework import routers
 from django.contrib import admin
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from Edahiras.views import MembresViewSet, DahirasViewSet, AudioViewSet, LocalitesViewSet, SectionsViewSet, \
-      serve_audio_file
+      serve_audio_file, ChapitreViewSet, ThemeViewSet, SequenceViewSet
 
 router = routers.DefaultRouter()
 router.register(r'membres', MembresViewSet)
 router.register(r'dahiras', DahirasViewSet)
-router.register(r'audio', AudioViewSet)
+router.register(r'audios', AudioViewSet)
 router.register(r'localites', LocalitesViewSet)
 router.register(r'sections', SectionsViewSet)
+router.register(r'chapitres', ChapitreViewSet)
+router.register(r'themes', ThemeViewSet)
+router.register(r'sequences', SequenceViewSet)
 print(router.urls)
 
 urlpatterns = [
