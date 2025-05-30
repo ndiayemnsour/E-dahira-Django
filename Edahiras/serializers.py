@@ -15,16 +15,17 @@ class MembresSerializer(serializers.ModelSerializer):
         fields = ('email', 'first_name', 'last_name', 'telephone', 'role','photo', 'dahira' )
 
 
+class ChapitreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Chapitre
+        fields = ['id', 'nom_chapitre']
 class SequenceSerializer(serializers.ModelSerializer):
+    chapitre = ChapitreSerializer(read_only=True)
+
     class Meta:
         model = Sequence
         fields = "__all__"
 
-class ChapitreSerializer(serializers.ModelSerializer):
-    sequence = SequenceSerializer(read_only=True)
-    class Meta:
-        model = Chapitre
-        fields = "__all__"
 
 
 class ThemeSerializer(serializers.ModelSerializer):

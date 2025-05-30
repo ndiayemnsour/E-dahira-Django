@@ -7,6 +7,7 @@ from django.contrib import admin
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from Edahiras.views import MembresViewSet, DahirasViewSet, AudioViewSet, LocalitesViewSet, SectionsViewSet, \
       serve_audio_file, ChapitreViewSet, ThemeViewSet, SequenceViewSet
+from .views import ChapitresByThemeAPIView
 
 router = routers.DefaultRouter()
 router.register(r'membres', MembresViewSet)
@@ -27,5 +28,8 @@ urlpatterns = [
       path('media/audio/<str:filename>', serve_audio_file), # nouvelle route audio directe
       path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
       path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+                    path('api/themes/<int:theme_id>/chapitres/', ChapitresByThemeAPIView.as_view(),
+                         name='chapitres-by-theme'),
+
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -6,6 +6,7 @@ from .models import Membres, Audio, Sections, Localites, Dahiras, Sequence, Chap
 from .serializers import MembresSerializer, DahirasSerializer, AudioSerializer, SectionsSerializer, LocalitesSerializer, \
     SequenceSerializer, ChapitreSerializer, ThemeSerializer
 from django.http import FileResponse, Http404
+from rest_framework import generics
 
 #Crée une vue spéciale pour servir les fichiers audio (avec le bon header)
 def serve_audio_file(request, filename):
@@ -60,4 +61,10 @@ class LocalitesViewSet(viewsets.ModelViewSet):
 
 
 
+class ChapitresByThemeAPIView(generics.ListAPIView):
+    serializer_class = ChapitreSerializer
+
+    def get_queryset(self):
+        theme_id = self.kwargs['theme_id']
+        return Chapitre.objects.filter(theme_id=theme_id)
 
