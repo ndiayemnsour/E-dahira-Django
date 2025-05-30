@@ -90,7 +90,7 @@ class Audio(models.Model):
     )
     date_audio = models.DateField(auto_now=True, null=True, blank=True)
     auteur = models.ForeignKey(Membres, on_delete=models.CASCADE, related_name='audio')
-    theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='audio')
+    #theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='audio')
     chapitre = models.ForeignKey(Chapitre, on_delete=models.CASCADE, related_name='audio')
     sequence = models.ForeignKey(Sequence, on_delete=models.CASCADE, related_name='audio', null=True, blank=True)
 
@@ -100,7 +100,7 @@ class Audio(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.theme} {self.chapitre} {self.sequence}"
+        return f"{self.chapitre} {self.sequence}"
 
 # --- Classe Localites ---
 class Localites(models.Model):

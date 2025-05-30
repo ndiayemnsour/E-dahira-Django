@@ -36,7 +36,7 @@ class ThemeSerializer(serializers.ModelSerializer):
 
 
 class AudioSerializer(serializers.HyperlinkedModelSerializer):
-    theme = ThemeSerializer(read_only=True)
+   # theme = ThemeSerializer(read_only=True)
     chapitre = ChapitreSerializer(read_only=True)
     sequence = SequenceSerializer(read_only=True)
     auteur = MembresSerializer(read_only=True)

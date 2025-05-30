@@ -58,7 +58,7 @@ class MembresAdmin(UserAdmin):
 @admin.register(Audio)
 class AudioAdmin(admin.ModelAdmin):
     list_display = (
-        'theme',
+        #'theme',
         'chapitre',
         'sequence',
         'audio_file',
