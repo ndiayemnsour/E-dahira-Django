@@ -68,10 +68,11 @@ class Theme(models.Model):
 class Chapitre(models.Model):
     nom_chapitre = models.CharField(max_length=150)
     theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='chapitres', null=True, blank=True)
-   # sequence = models.ForeignKey(Sequence, on_delete=models.CASCADE, related_name='chapitres', null=True, blank=True)
+    auteur = models.ForeignKey(Membres, on_delete=models.CASCADE, related_name='chapitres', null=True, blank=True)  # <-- ajout
 
     def __str__(self):
         return f"{self.nom_chapitre}"
+
 
 # --- Classe Audio ---
 class Audio(models.Model):
@@ -90,7 +91,7 @@ class Audio(models.Model):
     )
     date_audio = models.DateField(auto_now=True, null=True, blank=True)
     auteur = models.ForeignKey(Membres, on_delete=models.CASCADE, related_name='audio')
-    #theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='audio')
+    theme = models.ForeignKey(Theme, on_delete=models.CASCADE, related_name='audio', null=True, blank=True)
     chapitre = models.ForeignKey(Chapitre, on_delete=models.CASCADE, related_name='audio')
     sequence = models.ForeignKey(Sequence, on_delete=models.CASCADE, related_name='audio', null=True, blank=True)
 

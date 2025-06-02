@@ -145,6 +145,8 @@ AUTH_USER_MODEL = 'Edahiras.Membres'
 
 # Permission et pagination
 REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+
     #'DEFAULT_PAGINATION_CLASS': None,
     # Activer JWT comme méthode d’authentification par défaut
     # Ça va protéger toutes les routes DRF sauf celles où tu définis d’autres permissions.
@@ -158,7 +160,8 @@ REST_FRAMEWORK = {
             'rest_framework_simplejwt.authentication.JWTAuthentication',
 
         ),
+'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',  # désactive l’interface HTML
+    ),
 
 }
-
-

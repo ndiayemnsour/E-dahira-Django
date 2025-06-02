@@ -8,6 +8,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from Edahiras.views import MembresViewSet, DahirasViewSet, AudioViewSet, LocalitesViewSet, SectionsViewSet, \
       serve_audio_file, ChapitreViewSet, ThemeViewSet, SequenceViewSet
 from .views import ChapitresByThemeAPIView
+from .views import AudioListView
 
 router = routers.DefaultRouter()
 router.register(r'membres', MembresViewSet)
@@ -21,7 +22,9 @@ router.register(r'sequences', SequenceViewSet)
 print(router.urls)
 
 urlpatterns = [
-      path('', lambda request: HttpResponse("Bienvenue sur la page d'accueil de E-dahira!")),  # Page d'accueil
+                  path('audios/', AudioListView.as_view(), name='audio-list'),
+
+                  path('', lambda request: HttpResponse("Bienvenue sur la page d'accueil de E-dahira!")),  # Page d'accueil
       path('admin/', admin.site.urls),
       path('api/', include(router.urls)),
       path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
@@ -32,4 +35,3 @@ urlpatterns = [
                          name='chapitres-by-theme'),
 
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

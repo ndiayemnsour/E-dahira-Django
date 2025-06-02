@@ -7,6 +7,13 @@ from .serializers import MembresSerializer, DahirasSerializer, AudioSerializer, 
     SequenceSerializer, ChapitreSerializer, ThemeSerializer
 from django.http import FileResponse, Http404
 from rest_framework import generics
+from .models import Audio
+from .serializers import AudioSerializer
+from .filters import AudioFilter
+from django_filters.rest_framework import DjangoFilterBackend
+from django.db.models import F
+
+from django.db import models  # 👈 nécessaire pour utiliser models.F
 
 #Crée une vue spéciale pour servir les fichiers audio (avec le bon header)
 def serve_audio_file(request, filename):
@@ -42,10 +49,24 @@ class ThemeViewSet(viewsets.ModelViewSet):
     serializer_class = ThemeSerializer
 
 
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import AudioFilter
+
 class AudioViewSet(viewsets.ModelViewSet):
-    queryset = Audio.objects.all().order_by('-date_audio')
     serializer_class = AudioSerializer
-    #permission_classes = [IsAuthenticated]
+    queryset = Audio.objects.all()  # Obligatoire pour DRF
+
+    def get_queryset(self):
+        # Par défaut, filtre tous les audios dont l’auteur == chapitre.auteur
+        queryset = Audio.objects.filter(auteur=F('chapitre__auteur'))
+
+        # Récupération des éventuels filtres GET
+        chapitre_id = self.request.query_params.get('chapitre')
+        if chapitre_id:
+            queryset = queryset.filter(chapitre__id=chapitre_id)
+
+        return queryset
+
 
 
 class SectionsViewSet(viewsets.ModelViewSet):
@@ -68,3 +89,23 @@ class ChapitresByThemeAPIView(generics.ListAPIView):
         theme_id = self.kwargs['theme_id']
         return Chapitre.objects.filter(theme_id=theme_id)
 
+class AudioListView(generics.ListAPIView):
+    serializer_class = AudioSerializer
+    filterset_class = AudioFilter
+
+    def get_queryset(self):
+        queryset = Audio.objects.all()
+        chapitre_id = self.request.query_params.get('chapitre')
+        auteur_id = self.request.query_params.get('auteur')
+        theme = self.request.query_params.get('theme')
+
+        if chapitre_id:
+            queryset = queryset.filter(chapitre_id=chapitre_id)
+        if auteur_id:
+            queryset = queryset.filter(auteur_id=auteur_id)
+        if theme:
+            # Filtrer via la relation indirecte: audio -> chapitre -> theme
+            queryset = queryset.filter(chapitre__theme__nom_theme=theme)
+
+        # Trier par date_audio (champ valide)
+        return queryset.order_by('date_audio')
