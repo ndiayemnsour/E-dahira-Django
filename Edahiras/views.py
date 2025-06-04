@@ -6,6 +6,7 @@ from .models import Membres, Audio, Sections, Localites, Dahiras, Sequence, Chap
 from .serializers import MembresSerializer, DahirasSerializer, AudioSerializer, SectionsSerializer, LocalitesSerializer, \
     SequenceSerializer, ChapitreSerializer, ThemeSerializer
 from django.http import FileResponse, Http404
+from django.shortcuts import render
 from rest_framework import generics
 from .models import Audio
 from .serializers import AudioSerializer
@@ -109,3 +110,10 @@ class AudioListView(generics.ListAPIView):
 
         # Trier par date_audio (champ valide)
         return queryset.order_by('date_audio')
+
+# Vue pour la page d'accueil
+def home(request):
+    """
+    Vue pour la page d'accueil qui utilise le template index.html
+    """
+    return render(request, 'index.html')
