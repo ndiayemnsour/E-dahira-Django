@@ -6,7 +6,7 @@ from rest_framework import routers
 from django.contrib import admin
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from Edahiras.views import MembresViewSet, DahirasViewSet, AudioViewSet, LocalitesViewSet, SectionsViewSet, \
-      serve_audio_file, ChapitreViewSet, ThemeViewSet, SequenceViewSet
+      serve_audio_file, ChapitreViewSet, ThemeViewSet, SequenceViewSet, home
 from .views import ChapitresByThemeAPIView
 from .views import AudioListView
 
@@ -24,7 +24,7 @@ print(router.urls)
 urlpatterns = [
                   path('audios/', AudioListView.as_view(), name='audio-list'),
 
-                  path('', lambda request: HttpResponse("Bienvenue sur la page d'accueil de E-dahira!")),  # Page d'accueil
+                  path('', home, name='home'),  # Page d'accueil
       path('admin/', admin.site.urls),
       path('api/', include(router.urls)),
       path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),

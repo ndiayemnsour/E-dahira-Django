@@ -22,7 +22,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('', lambda request: HttpResponse("Bienvenue sur la page d'accueil de E-dahira!")),
     path("admin/", admin.site.urls),
     path('', include('Edahiras.urls')),
 ]
