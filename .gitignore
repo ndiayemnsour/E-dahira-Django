@@ -15,7 +15,6 @@ local_settings.py
 
 # Static et media
 static/
-media/
 staticfiles/
 
 # IDE et OS
